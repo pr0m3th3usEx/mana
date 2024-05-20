@@ -1,3 +1,8 @@
+pub mod alrogrithms;
+pub mod entities;
+pub mod formulas;
+pub mod traits;
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
