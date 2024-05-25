@@ -1,4 +1,4 @@
-use crate::{entities::point::Point, traits::metric::Metric};
+use crate::traits::metric::{Metric, MetricResult};
 
 pub struct RSI {
     n: f64,
@@ -19,9 +19,9 @@ impl Metric for RSI {
         self.current
     }
 
-    async fn compute(&mut self, points: &[Point], period: usize) {
+    async fn compute(&mut self, points: &[f64], period: usize) -> MetricResult<()> {
         if points.len() < period || period < (self.n as usize - 1) {
-            return;
+            return Ok(());
         }
 
         // should only take the slice of the n-last points
@@ -33,17 +33,17 @@ impl Metric for RSI {
         let mut t0 = 0f64;
         for (index, point) in slice.iter().enumerate() {
             if index == 0 {
-                t0 = point.close_price;
+                t0 = *point;
                 continue;
             }
 
-            if point.close_price - t0 > 0f64 {
-                avg_gain_sum += point.close_price - t0;
+            if point - t0 > 0f64 {
+                avg_gain_sum += point - t0;
             } else {
-                avg_loss_sum += (point.close_price - t0).abs();
+                avg_loss_sum += (point - t0).abs();
             }
 
-            t0 = point.close_price;
+            t0 = *point;
         }
 
         let avg_gain = avg_gain_sum / self.n;
@@ -52,7 +52,9 @@ impl Metric for RSI {
         // Calculate relative strength
         let rs = avg_gain / avg_loss;
 
-        self.current = Some(100f64 - (100f64 / (1f64 + rs)))
+        self.current = Some(100f64 - (100f64 / (1f64 + rs)));
+
+        Ok(())
     }
 }
 
@@ -60,7 +62,7 @@ impl Metric for RSI {
 mod tests {
     use rstest::rstest;
 
-    use crate::{entities::point::Point, traits::metric::Metric};
+    use crate::traits::metric::Metric;
 
     use super::RSI;
 
@@ -73,17 +75,9 @@ mod tests {
         #[case] expected_result: f64,
     ) {
         let mut rsi = RSI::new(n);
-        let points: Vec<Point> = points
-            .into_iter()
-            .map(|e| Point {
-                close_price: e,
-                volume_base: 0f64,
-                volume_target: 0f64,
-            })
-            .collect();
 
-        for _i in 0..points.len() {
-            rsi.compute(&points, _i).await;
+        for i in 0..points.len() {
+            let _ = rsi.compute(&points, i).await;
         }
 
         assert_eq!(rsi.value(), Some(expected_result));

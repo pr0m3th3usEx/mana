@@ -1,4 +1,4 @@
-use crate::{entities::point::Point, traits::metric::Metric};
+use crate::traits::metric::{Metric, MetricResult};
 
 pub struct EMA {
     // Number of periods
@@ -26,24 +26,26 @@ impl EMA {
 }
 
 impl Metric for EMA {
-    async fn compute(&mut self, points: &[Point], period: usize) {
+    async fn compute(&mut self, values: &[f64], period: usize) -> MetricResult<()> {
         // Should not compute anything if not enough values
-        if points.len() < period || period < self.n as usize {
-            return;
+        if values.len() < period + 1 || period < self.n as usize {
+            return Ok(());
         }
 
         let Some(current) = self.current else {
             // Initial calculation
             self.current = Some(
-                points[..self.n as usize]
+                values[..self.n as usize]
                     .iter()
-                    .fold(0f64, |acc, e| acc + e.close_price)
+                    .fold(0f64, |acc, e| acc + e)
                     / self.n,
             );
-            return;
+            return Ok(());
         };
 
-        self.current = Some((points.get(period).unwrap().close_price - current) * self.k + current);
+        self.current = Some((values.get(period).unwrap() - current) * self.k + current);
+
+        Ok(())
     }
 
     fn value(&self) -> Option<f64> {
@@ -55,7 +57,7 @@ impl Metric for EMA {
 mod tests {
     use rstest::rstest;
 
-    use crate::{entities::point::Point, traits::metric::Metric};
+    use crate::traits::metric::Metric;
 
     use super::EMA;
 
@@ -68,17 +70,8 @@ mod tests {
         #[case] expected_value: f64,
     ) {
         let mut ema = EMA::new(n);
-        let points: Vec<Point> = points
-            .into_iter()
-            .map(|e| Point {
-                close_price: e,
-                volume_base: 0f64,
-                volume_target: 0f64,
-            })
-            .collect();
-
-        for _i in 0..points.len() {
-            ema.compute(&points, _i).await;
+        for i in 0..points.len() {
+            let _ = ema.compute(&points, i).await;
         }
 
         assert_eq!(ema.value(), Some(expected_value));

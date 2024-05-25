@@ -1,4 +1,7 @@
-use crate::{entities::point::Point, traits::metric::Metric};
+use crate::{
+    maths,
+    traits::metric::{Metric, MetricResult},
+};
 
 pub struct SMA {
     // Number of periods
@@ -20,31 +23,32 @@ impl SMA {
 impl Metric for SMA {
     async fn compute(
         &mut self,
-        points: &[Point],
+        values: &[f64],
         period: usize, // 0 == First period
-    ) {
-        if points.len() < period {
+    ) -> MetricResult<()> {
+        if values.len() < period {
             // Panics or send Err via Result<>
-            return;
+            return Ok(());
         }
 
-        // should only take the slice of the n-last points
+        // should only take the slice of the n-last values
         let slice = if period < (self.n as usize) - 1 {
-            points
+            values
         } else {
-            &points[((period + 1) - self.n as usize)..period + 1]
+            &values[((period + 1) - self.n as usize)..period + 1]
         };
 
-        let divider = if period < (self.n as usize) - 1 {
-            (period + 1) as f64
-        } else {
-            self.n
-        };
+        // let divider = if period < (self.n as usize) - 1 {
+        //     (period + 1) as f64
+        // } else {
+        //     self.n
+        // };
 
-        let sum = slice.iter().fold(0f64, |acc, p| acc + p.close_price);
-        let average = sum / divider;
+        let average = maths::average(slice)?;
 
         self.current = Some(average);
+
+        Ok(())
     }
 
     fn value(&self) -> Option<f64> {
@@ -56,7 +60,7 @@ impl Metric for SMA {
 mod tests {
     use rstest::rstest;
 
-    use crate::{entities::point::Point, traits::metric::Metric};
+    use crate::traits::metric::Metric;
 
     #[rstest]
     #[case(vec![1f64, 2f64, 3f64], 5, 2f64)]
@@ -70,17 +74,8 @@ mod tests {
 
         assert!(sma.value().is_none());
 
-        let points: Vec<Point> = points
-            .into_iter()
-            .map(|e| Point {
-                close_price: e,
-                volume_base: 0f64,
-                volume_target: 0f64,
-            })
-            .collect();
-
-        for _i in 0..points.len() {
-            sma.compute(&points, _i).await;
+        for i in 0..points.len() {
+            let _ = sma.compute(&points, i).await;
         }
 
         assert_eq!(sma.value(), Some(expected_value));
