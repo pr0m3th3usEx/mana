@@ -16,11 +16,11 @@ impl RSI {
 
 impl Metric for RSI {
     fn value(&self) -> Option<f64> {
-        self.current
+        self.current.clone()
     }
 
     async fn compute(&mut self, points: &[f64], period: usize) -> MetricResult<()> {
-        if points.len() < period || period < (self.n as usize - 1) {
+        if points.len() < period + 1 || period < (self.n as usize - 1) {
             return Ok(());
         }
 

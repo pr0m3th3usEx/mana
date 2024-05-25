@@ -5,6 +5,8 @@ use crate::maths::MathError;
 #[derive(Debug)]
 pub enum MetricError {
     ComputationError(Box<dyn Error>),
+    MissingDependency,
+    LockError,
 }
 
 pub type MetricResult<T> = Result<T, MetricError>;
@@ -33,6 +35,7 @@ impl std::fmt::Display for MetricError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             MetricError::ComputationError(err) => write!(f, "MetricError: {:?}", err),
+            other => write!(f, "MetricError: {:?}", other),
         }
     }
 }

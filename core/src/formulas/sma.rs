@@ -18,6 +18,10 @@ impl SMA {
             current: None,
         }
     }
+
+    pub fn period(&self) -> f64 {
+        self.n
+    }
 }
 
 impl Metric for SMA {
@@ -38,12 +42,6 @@ impl Metric for SMA {
             &values[((period + 1) - self.n as usize)..period + 1]
         };
 
-        // let divider = if period < (self.n as usize) - 1 {
-        //     (period + 1) as f64
-        // } else {
-        //     self.n
-        // };
-
         let average = maths::average(slice)?;
 
         self.current = Some(average);
@@ -52,7 +50,7 @@ impl Metric for SMA {
     }
 
     fn value(&self) -> Option<f64> {
-        self.current
+        self.current.clone()
     }
 }
 
