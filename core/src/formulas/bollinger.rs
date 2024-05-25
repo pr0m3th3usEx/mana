@@ -70,7 +70,7 @@ impl Metric for Bollinger {
     }
 
     fn value(&self) -> Option<f64> {
-        self.current.clone()
+        self.current
     }
 }
 

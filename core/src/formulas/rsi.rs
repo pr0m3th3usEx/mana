@@ -16,7 +16,7 @@ impl RSI {
 
 impl Metric for RSI {
     fn value(&self) -> Option<f64> {
-        self.current.clone()
+        self.current
     }
 
     async fn compute(&mut self, points: &[f64], period: usize) -> MetricResult<()> {
