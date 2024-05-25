@@ -1,6 +1,6 @@
 use crate::{entities::point::Point, traits::metric::Metric};
 
-pub struct Ema {
+pub struct EMA {
     // Number of periods
     n: f64,
 
@@ -11,7 +11,7 @@ pub struct Ema {
     current: Option<f64>,
 }
 
-impl Ema {
+impl EMA {
     pub fn new(n: u64) -> Self {
         Self {
             n: n as f64,
@@ -25,7 +25,7 @@ impl Ema {
     }
 }
 
-impl Metric for Ema {
+impl Metric for EMA {
     async fn compute(&mut self, points: &[Point], period: usize) {
         // Should not compute anything if not enough values
         if points.len() < period || period < self.n as usize {
@@ -57,7 +57,7 @@ mod tests {
 
     use crate::{entities::point::Point, traits::metric::Metric};
 
-    use super::Ema;
+    use super::EMA;
 
     #[rstest]
     #[case(2, vec![2f64, 4f64, 6f64, 8f64, 12f64, 14f64, 16f64, 18f64, 20f64], 18.989026063100138)]
@@ -67,7 +67,7 @@ mod tests {
         #[case] points: Vec<f64>,
         #[case] expected_value: f64,
     ) {
-        let mut ema = Ema::new(n);
+        let mut ema = EMA::new(n);
         let points: Vec<Point> = points
             .into_iter()
             .map(|e| Point {

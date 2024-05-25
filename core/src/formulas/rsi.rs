@@ -1,11 +1,11 @@
 use crate::{entities::point::Point, traits::metric::Metric};
 
-pub struct Rsi {
+pub struct RSI {
     n: f64,
     current: Option<f64>,
 }
 
-impl Rsi {
+impl RSI {
     pub fn new(n: u64) -> Self {
         Self {
             n: n as f64,
@@ -14,7 +14,7 @@ impl Rsi {
     }
 }
 
-impl Metric for Rsi {
+impl Metric for RSI {
     fn value(&self) -> Option<f64> {
         self.current
     }
@@ -62,7 +62,7 @@ mod tests {
 
     use crate::{entities::point::Point, traits::metric::Metric};
 
-    use super::Rsi;
+    use super::RSI;
 
     #[rstest]
     #[case(14, vec![45f64, 46f64, 47f64, 44f64, 43f64, 42f64, 44f64, 45f64, 46f64, 48f64, 47f64, 49f64, 50f64, 51f64], 66.66666666666666)]
@@ -72,7 +72,7 @@ mod tests {
         #[case] points: Vec<f64>,
         #[case] expected_result: f64,
     ) {
-        let mut rsi = Rsi::new(n);
+        let mut rsi = RSI::new(n);
         let points: Vec<Point> = points
             .into_iter()
             .map(|e| Point {
