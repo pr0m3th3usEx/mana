@@ -1,14 +1,4 @@
-// MetricsHistoryBuilder::new()
-//     .add_metric("")?
-//     .add_metric("")?
-//     .add_metric("")?
-//     .build();
-
-// From<Vec<String>> for MetricsHiistory
-
 use std::collections::HashSet;
-
-use thiserror::Error;
 
 use crate::{history::metrics_history::MetricsHistory, traits::builder::Builder};
 
@@ -17,10 +7,15 @@ pub struct MetricsHistoryBuilder {
     metrics_list: HashSet<String>,
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum MetricsHistoryBuilderError {
-    #[error("Metric already added: {0}")]
     MetricAlreadyAdded(String),
+}
+
+impl std::fmt::Display for MetricsHistoryBuilderError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 impl MetricsHistoryBuilder {
@@ -28,6 +23,7 @@ impl MetricsHistoryBuilder {
         Self::default()
     }
 
+    // TODO: improve metric addition to pre-sort metric computation in the DataProcessor
     pub fn add_metric(mut self, name: &str) -> Result<Self, MetricsHistoryBuilderError> {
         let metric_name = name.to_lowercase().to_string();
         if !self.metrics_list.insert(metric_name.clone()) {

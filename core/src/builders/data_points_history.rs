@@ -1,17 +1,24 @@
 use std::collections::HashMap;
 
 use chrono::{DateTime, Utc};
-use thiserror::Error;
 
 use crate::traits::history::History;
 
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum DataPointHistoryError {
     InvalidData,
 }
 
+impl std::fmt::Display for DataPointHistoryError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl std::error::Error for DataPointHistoryError {}
+
 pub struct DataPointHistory<T> {
-    history: HashMap<DateTime<Utc>, T>
+    history: HashMap<DateTime<Utc>, T>,
 }
 
 impl<T> History<T> for DataPointHistory<T> {

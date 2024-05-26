@@ -1,15 +1,21 @@
 use std::collections::{HashMap, HashSet};
 
 use chrono::{DateTime, Utc};
-use thiserror::Error;
 
 use crate::traits::history::History;
 
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum MetricsHistoryError {
-    #[error("Invalid data format")]
     InvalidData,
 }
+
+impl std::fmt::Display for MetricsHistoryError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl std::error::Error for MetricsHistoryError {}
 
 pub struct MetricsHistory {
     metrics: HashSet<String>,
