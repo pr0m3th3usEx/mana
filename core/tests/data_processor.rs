@@ -1,40 +1,35 @@
 use core::traits::data_processor::DataProcessor;
+use std::collections::BTreeMap;
 
 use chrono::{DateTime, Utc};
 
-pub struct MockDataProcessor {}
+#[derive(Default)]
+pub struct MockDataProcessor<T: Default> {
+    history: BTreeMap<DateTime<Utc>, T>,
+    period: u64,
+}
 
-impl DataProcessor<String> for MockDataProcessor {
-    fn add_data(&self, timestamp: DateTime<Utc>, data: String) {
-        todo!()
+impl<T: Default> MockDataProcessor<T> {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl DataProcessor<String> for MockDataProcessor<String> {
+    async fn update(&mut self, timestamp: DateTime<Utc>, data: String) {
+        self.history.insert(timestamp, data);
+        self.period += 1;
     }
 
-    fn register_metric(&self, metric: impl core::traits::metric::Metric) {
-        todo!()
+    fn reset(&mut self) {
+        self.period = 0;
     }
-
-    async fn update_metrics(&self) {
-        todo!()
+    
+    fn history(&self) -> &std::collections::BTreeMap<DateTime<Utc>, String> {
+        &self.history
     }
-
-    fn update_period(&self) {
-        todo!()
-    }
-
-    fn reset_period(&self) {
-        todo!()
-    }
-
-    fn reset(&self) {
-        todo!()
-    }
-
-    fn metrics_history(
-        &self,
-    ) -> &std::collections::HashMap<
-        chrono::prelude::DateTime<chrono::prelude::Utc>,
-        std::collections::HashMap<String, f64>,
-    > {
-        todo!()
+    
+    fn period(&self) -> u64 {
+        self.period
     }
 }

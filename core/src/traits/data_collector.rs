@@ -23,4 +23,7 @@ pub type DataCollectorResult<T> = std::result::Result<T, DataCollectorError>;
 pub trait DataCollector<T>: Publisher<Event, T> {
     // Collects data collection from source
     async fn consume(&self) -> DataCollectorResult<Option<T>>;
+
+    // Start standalone job
+    async fn start(&self);
 }

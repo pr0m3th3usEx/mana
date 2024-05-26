@@ -69,6 +69,11 @@ impl DataCollector<String> for MockDataCollector<String> {
 
         Ok(data)
     }
+    
+    async fn start(&self) {
+        // Not need for tests
+        todo!()
+    }
 }
 
 impl Publisher<Event, String> for MockDataCollector<String> {
