@@ -1,9 +1,11 @@
 use std::hash::Hash;
 
-pub type Subscriber<U> = fn(data: U) -> (dyn std::future::Future<Output = ()> + Send);
+use futures::future::BoxFuture;
+
+pub type Subscriber<U> = fn(data: U) -> BoxFuture<'static, ()>;
 
 pub trait Publisher<T: Hash, U> {
     fn subscribe(&mut self, event: T, observer: Subscriber<U>);
 
-    async fn notify(&self, event: T, data: U);
+    async fn notify(&self, event: &T, data: U);
 }

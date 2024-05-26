@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::{error::Error, fmt::Debug};
 
 use super::observability::publisher::Publisher;
 
@@ -7,10 +7,20 @@ pub enum Event {
     New,
 }
 
-pub trait DataCollector<T>: Publisher<Event, T> {
-    // Initiates data collection from source
-    async fn start(&self);
+#[derive(Debug)]
+pub enum DataCollectorError {
+    ServiceError(Box<dyn Error>),
+}
 
-    // Stops data collection from source
-    async fn stop(&self);
+impl std::fmt::Display for DataCollectorError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+pub type DataCollectorResult<T> = std::result::Result<T, DataCollectorError>;
+
+pub trait DataCollector<T>: Publisher<Event, T> {
+    // Collects data collection from source
+    async fn consume(&self) -> DataCollectorResult<Option<T>>;
 }
