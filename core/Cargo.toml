@@ -8,7 +8,7 @@ edition = "2021"
 chrono = { workspace = true }
 thiserror = { workspace = true }
 futures = { workspace = true }
+tokio = { workspace = true }
 
 [dev-dependencies]
 rstest = { workspace = true }
-tokio = { workspace = true }
