@@ -7,11 +7,19 @@ use crate::{
 
 use super::sma::SMA;
 
+#[derive(Debug)]
 pub enum BollingerType {
     UpperBand(f64), // k factor
     LowerBand(f64), // k factor
 }
 
+impl Default for BollingerType {
+    fn default() -> Self {
+        Self::LowerBand(0f64)
+    }
+}
+
+#[derive(Debug, Default)]
 pub struct Bollinger {
     sma: Arc<RwLock<SMA>>,
     band_type: BollingerType,

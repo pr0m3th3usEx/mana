@@ -6,7 +6,7 @@ use data_processor::MockDataProcessor;
 mod data_processor;
 
 async fn run() {
-    let mut data_processor: MockDataProcessor::<String> = MockDataProcessor::new();
+    let mut data_processor: MockDataProcessor<String> = MockDataProcessor::new();
 
     assert_eq!(data_processor.period(), 0);
     assert_eq!(data_processor.history().len(), 0);
@@ -18,7 +18,10 @@ async fn run() {
 
     assert_eq!(data_processor.period(), 2);
     assert_eq!(data_processor.history().len(), 2);
-    assert_eq!(data_processor.history().get(&dt), Some("World".to_string()).as_ref());
+    assert_eq!(
+        data_processor.history().get(&dt),
+        Some("World".to_string()).as_ref()
+    );
 }
 
 #[test]

@@ -69,7 +69,7 @@ impl DataCollector<String> for MockDataCollector<String> {
 
         Ok(data)
     }
-    
+
     async fn start(&self) {
         // Not need for tests
         todo!()

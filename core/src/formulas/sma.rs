@@ -3,6 +3,7 @@ use crate::{
     traits::metric::{Metric, MetricResult},
 };
 
+#[derive(Debug, Default)]
 pub struct SMA {
     // Number of periods
     n: f64,

@@ -1,0 +1,36 @@
+# TOKEN TO TRADE INFORMATION
+
+token:
+  name: Token 1
+  symbol: TKN
+  decimals: 8
+  address: 0x11111111111111111111111111111111
+  # Community information to pull data from this threads / accounts
+  community:
+    reddit:
+    discord:
+    telegram:
+    twitter:
+
+bot:
+  # Slippage tolerance: 0 -> 1 (0% to 100%)
+  slippage: 0.2 
+  # Maximum SOL Gas fee accepted
+  gas: 0.00005
+
+  metrics:
+    - name: EMA1
+      type: EMA
+      period: 2
+
+  orders:
+    # List Stop Loss Orders to automate Buy and Sell
+    stopLoss:
+      - type:
+        # Period in seconds (optional)
+        period:
+        value: 
+
+node:
+  provider: QUICKNODE / PUBLIC
+  url: ""

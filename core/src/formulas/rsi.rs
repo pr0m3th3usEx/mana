@@ -1,5 +1,6 @@
 use crate::traits::metric::{Metric, MetricResult};
 
+#[derive(Debug, Default)]
 pub struct RSI {
     n: f64,
     current: Option<f64>,

@@ -1,5 +1,6 @@
 use crate::traits::metric::{Metric, MetricResult};
 
+#[derive(Debug, Default)]
 pub struct EMA {
     // Number of periods
     n: f64,

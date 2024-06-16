@@ -24,11 +24,11 @@ impl DataProcessor<String> for MockDataProcessor<String> {
     fn reset(&mut self) {
         self.period = 0;
     }
-    
+
     fn history(&self) -> &std::collections::BTreeMap<DateTime<Utc>, String> {
         &self.history
     }
-    
+
     fn period(&self) -> u64 {
         self.period
     }
