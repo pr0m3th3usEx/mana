@@ -1,16 +1,16 @@
 use solana_sdk::pubkey::Pubkey;
 
 #[derive(Debug, Default)]
-pub struct TokenAddress {
+pub struct Transactor {
     address: Pubkey,
 }
 
-impl TokenAddress {
+impl Transactor {
     pub fn new(address: impl TryInto<Pubkey>) -> Result<Self, &'static str> {
         Ok(Self {
             address: address
                 .try_into()
-                .map_err(|_| "TokenAddress: Invalid public key")?,
+                .map_err(|_| "Transactor: invalid public key")?,
         })
     }
 

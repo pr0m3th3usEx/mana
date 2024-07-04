@@ -1,73 +1,11 @@
 use std::{fs::File, io::Read};
 
-use serde::Deserialize;
+use inputs::ConfigurationFileInput;
 use thiserror::Error;
 
+pub mod inputs;
+
 use crate::{entities::configuration::Configuration, traits::builder::Builder};
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ConfigurationFileInput {
-    pub token: TokenInfoInput,
-    pub bot: BotConfigInput,
-    pub node: NodeConfigInput,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct TokenInfoInput {
-    pub name: String,
-    pub symbol: String,
-    pub address: String,
-    pub community: Option<CommunityInput>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct CommunityInput {
-    pub reddit: Option<String>,
-    pub discord: Option<String>,
-    pub telegram: Option<String>,
-    pub twitter: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct NodeConfigInput {
-    pub provider: String,
-    pub url: String,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct BotConfigInput {
-    pub slippage: Option<f64>,
-    pub gas: Option<f64>,
-    pub orders: Option<BotOrdersConfigInput>,
-    pub metrics: Option<Vec<MetricsConfigInput>>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct BotOrdersConfigInput {
-    pub stop_loss: Option<Vec<StopLossConfigInput>>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct StopLossConfigInput {
-    #[serde(rename = "type")]
-    pub order_type: String,
-    pub period: Option<u64>,
-    pub value: Option<f64>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct MetricsConfigInput {
-    pub name: String,
-    pub period: Option<u64>,
-}
 
 pub struct ConfigurationBuilder {
     config_file: Option<String>,

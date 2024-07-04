@@ -4,7 +4,7 @@ token:
   name: Token 1
   symbol: TKN
   decimals: 8
-  address: 0x11111111111111111111111111111111
+  address: 5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY
   # Community information to pull data from this threads / accounts
   community:
     reddit:
@@ -14,9 +14,9 @@ token:
 
 bot:
   # Slippage tolerance: 0 -> 1 (0% to 100%)
-  slippage: 0.2 
+  slippage: 0.2
   # Maximum SOL Gas fee accepted
-  gas: 0.00005
+  priority_fee: 0.00005
 
   metrics:
     - name: EMA
@@ -28,8 +28,8 @@ bot:
       - type:
         # Period in seconds (optional)
         period:
-        value: 
+        value:
 
 node:
-  provider: QUICKNODE / PUBLIC
-  url: ""
+  provider: QUICKNODE
+  url: "https://quicknode.com/test"

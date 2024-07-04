@@ -4,9 +4,11 @@ pub struct TokenName {
 }
 
 impl TokenName {
-    pub fn new(name: String) -> Result<Self, &'static str> {
+    pub fn new(name: impl ToString) -> Result<Self, &'static str> {
+        let name = name.to_string();
+
         if name.is_empty() {
-            return Err("name cannot be empty");
+            return Err("TokenName: name cannot be empty");
         }
         Ok(Self { name })
     }

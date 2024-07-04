@@ -1,8 +1,8 @@
 use crate::{
-    builders::configuration_builder::ConfigurationFileInput,
+    builders::configuration_builder::inputs::ConfigurationFileInput,
     formulas::{bollinger::Bollinger, ema::EMA, rsi::RSI, sma::SMA},
     value_objects::configuration::{
-        bot_settings::BotSettings, community::Community, node_info::NodeInfo, token_info::TokenInfo,
+        bot_settings::BotSettings, community::Community, node::Node, token_info::TokenInfo,
     },
 };
 
@@ -18,16 +18,23 @@ pub enum Metrics {
 pub struct Configuration {
     token_info: TokenInfo, // URL
     community: Community,
-    node: NodeInfo,
+    node: Node,
     bot_settings: BotSettings,
 }
 
-impl TryInto<Configuration> for ConfigurationFileInput {
+impl TryFrom<ConfigurationFileInput> for Configuration {
     type Error = &'static str;
 
-    fn try_into(self) -> Result<Configuration, Self::Error> {
-        println!("{:#?}", self);
+    fn try_from(input: ConfigurationFileInput) -> Result<Self, Self::Error> {
+        let (token_info, community): (TokenInfo, Community) = input.token.try_into()?;
+        let node = Node::try_from(input.node)?;
+        let bot_settings = BotSettings::try_from(input.bot)?;
 
-        Ok(Configuration::default())
+        Ok(Self {
+            token_info,
+            community,
+            node,
+            bot_settings,
+        })
     }
 }

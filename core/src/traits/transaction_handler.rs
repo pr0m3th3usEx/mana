@@ -20,5 +20,10 @@ pub trait TransactionHandler {
     /// Confirmed transaction or [`TransactionHandlerError`]
     async fn buy(&self, order: TransactionOrder) -> Result<()>;
 
+    /// Args:
+    /// - order: [`TransactionOrder`]
+    ///
+    /// Returns:
+    /// Confirmed transaction or [`TransactionHandlerError`]
     async fn sell(&self, order: TransactionOrder) -> Result<()>;
 }
