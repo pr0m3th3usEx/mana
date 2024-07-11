@@ -61,6 +61,6 @@ mod tests {
 
         let result = config.build();
 
-        assert!(result.is_ok())
+        assert!(result.is_ok(), "{:?}", result)
     }
 }

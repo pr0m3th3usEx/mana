@@ -1,25 +1,16 @@
 use crate::{
     builders::configuration_builder::inputs::ConfigurationFileInput,
-    formulas::{bollinger::Bollinger, ema::EMA, rsi::RSI, sma::SMA},
     value_objects::configuration::{
         bot_settings::BotSettings, community::Community, node::Node, token_info::TokenInfo,
     },
 };
 
-#[derive(Debug)]
-pub enum Metrics {
-    EMA(EMA),
-    RSI(RSI),
-    SMA(SMA),
-    Bollinger(Bollinger),
-}
-
 #[derive(Debug, Default)]
 pub struct Configuration {
-    token_info: TokenInfo, // URL
-    community: Community,
-    node: Node,
-    bot_settings: BotSettings,
+    pub token_info: TokenInfo, // URL
+    pub community: Community,
+    pub node: Node,
+    pub bot_settings: BotSettings,
 }
 
 impl TryFrom<ConfigurationFileInput> for Configuration {

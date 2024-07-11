@@ -52,24 +52,45 @@ BOT CONFIGURATION
 **/
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct StopLossConfigInput {
-    #[serde(rename = "type")]
-    pub order_type: String,
-    pub period: Option<u64>,
-    pub value: Option<f64>,
+#[serde(tag = "type", rename_all = "lowercase")]
+pub enum StopLossConfigInput {
+    Fixed(FixedStopLossInput),
+    Trailing(TrailingStopLossInput),
+    Performance(PerformanceStopLossInput),
+    Time(TimeBasedStopLossInput),
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-struct MetricsConfigInput {
-    pub name: String,
-    pub period: Option<u64>,
+pub struct FixedStopLossInput {
+    pub floor: f64,
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-struct BotOrdersConfigInput {
+pub struct TrailingStopLossInput {
+    pub drop: f64,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PerformanceStopLossInput {
+    pub profit: f64,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TimeBasedStopLossInput {
+    pub duration: usize,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+enum MetricsConfigInput {}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BotOrdersConfigInput {
     pub stop_loss: Option<Vec<StopLossConfigInput>>,
 }
 
@@ -78,8 +99,8 @@ struct BotOrdersConfigInput {
 pub struct BotConfigInput {
     pub slippage: Option<f64>,
     pub priority_fee: Option<f64>,
+    pub bet: f64,
     pub orders: Option<BotOrdersConfigInput>,
-    pub metrics: Option<Vec<MetricsConfigInput>>,
 }
 
 /**

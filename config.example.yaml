@@ -13,9 +13,11 @@ token:
     twitter:
 
 bot:
+  # Amount of SOL bet
+  bet: 0.02
   # Slippage tolerance: 0 -> 1 (0% to 100%)
   slippage: 0.2
-  # Maximum SOL Gas fee accepted
+  # SOL gas fee for each transaction
   priority_fee: 0.00005
 
   metrics:
@@ -26,11 +28,19 @@ bot:
   orders:
     # List Stop Loss Orders to automate Buy and Sell
     stopLoss:
-      - type:
-        # Period in seconds (optional)
-        period:
-        value:
+      - type: fixed
+        # Price floor in SOL
+        floor: 0.0001
+      - type: trailing
+        # Drop max for the highest price acheived: 0 -> 1 (0% -> 100%)
+        drop: 0.1
+      - type: performance
+        # Profit aimed: 0 -> 1 (0% -> 100%)
+        profit: 1.5
+      - type: time
+        # Duration to idle before selling (in seconds)
+        duration: 100000
 
 node:
-  provider: QUICKNODE / PUBLIC
+  provider: QUICKNODE / MAINNET
   url: ""
