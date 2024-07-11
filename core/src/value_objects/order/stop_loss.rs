@@ -11,7 +11,7 @@ pub enum StopLossOrder {
 }
 
 impl StopLossOrder {
-    fn should_trigger(current_price: f64) -> bool {
+    pub fn should_trigger(_current_price: f64) -> bool {
         todo!()
     }
 }

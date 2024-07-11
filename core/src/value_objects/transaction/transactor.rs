@@ -15,6 +15,6 @@ impl Transactor {
     }
 
     pub fn value(&self) -> Pubkey {
-        self.address.clone()
+        self.address
     }
 }

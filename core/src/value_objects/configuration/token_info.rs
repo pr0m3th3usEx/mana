@@ -4,10 +4,10 @@ use crate::value_objects::token::{
 
 #[derive(Debug, Default)]
 pub struct TokenInfo {
-    name: TokenName,
-    decimals: u8,
-    symbol: TokenSymbol,
-    address: TokenAddress,
+    pub name: TokenName,
+    pub decimals: u8,
+    pub symbol: TokenSymbol,
+    pub address: TokenAddress,
 }
 
 impl TokenInfo {

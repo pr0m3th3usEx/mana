@@ -42,9 +42,8 @@ impl Builder<Configuration> for ConfigurationBuilder {
         let yaml: ConfigurationFileInput = serde_yaml::from_str(&content)
             .map_err(|err| ConfigurationBuilderError::ParsingError(err.to_string()))?;
 
-        Ok(yaml
-            .try_into()
-            .map_err(|err: &str| ConfigurationBuilderError::ParsingError(err.to_string()))?)
+        yaml.try_into()
+            .map_err(|err: &str| ConfigurationBuilderError::ParsingError(err.to_string()))
     }
 }
 
