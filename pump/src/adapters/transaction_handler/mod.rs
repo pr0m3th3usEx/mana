@@ -69,19 +69,13 @@ impl<'a> PumpTransactionHandler<'a> {
             .body(req_body)
             .send()
             .await
-            .map_err(|err| {
-                // TODO log error
-                PumpTransactionHandlerError::ApiClientError(err.to_string())
-            })?;
+            .map_err(|err| PumpTransactionHandlerError::ApiClientError(err.to_string()))?;
 
         // Deserialize response body
         let res_body = response
             .json::<TradeTransactionResponse>()
             .await
-            .map_err(|err| {
-                // TODO log error
-                PumpTransactionHandlerError::BodyError(err.to_string())
-            })?;
+            .map_err(|err| PumpTransactionHandlerError::BodyError(err.to_string()))?;
 
         Ok(res_body)
     }
@@ -98,28 +92,24 @@ impl<'a> TransactionHandler for PumpTransactionHandler<'a> {
         let tx_str = self
             .trade_transaction(TradeTransactionType::Buy, order)
             .await?;
-        let mut tx: Transaction = tx_str.try_into().map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::InvalidTransaction(err)
-        })?;
+        let mut tx: Transaction = tx_str
+            .try_into()
+            .map_err(|err| PumpTransactionHandlerError::InvalidTransaction(err))?;
 
         // Sign transaction
 
         let signers = vec![keypair];
-        let recent_blockhash = self.rpc.get_latest_blockhash().map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::RpcClientError(err.to_string())
-        })?;
+        let recent_blockhash = self
+            .rpc
+            .get_latest_blockhash()
+            .map_err(|err| PumpTransactionHandlerError::RpcClientError(err.to_string()))?;
 
-        tx.try_sign(&signers, recent_blockhash).map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::InvalidSignature(err.to_string())
-        })?;
+        tx.try_sign(&signers, recent_blockhash)
+            .map_err(|err| PumpTransactionHandlerError::InvalidSignature(err.to_string()))?;
 
-        self.rpc.send_and_confirm_transaction(&tx).map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::RpcClientError(err.to_string())
-        })
+        self.rpc
+            .send_and_confirm_transaction(&tx)
+            .map_err(|err| PumpTransactionHandlerError::RpcClientError(err.to_string()))
     }
 
     async fn sell(
@@ -130,27 +120,23 @@ impl<'a> TransactionHandler for PumpTransactionHandler<'a> {
         let tx_str = self
             .trade_transaction(TradeTransactionType::Sell, order)
             .await?;
-        let mut tx: Transaction = tx_str.try_into().map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::InvalidTransaction(err)
-        })?;
+        let mut tx: Transaction = tx_str
+            .try_into()
+            .map_err(|err| PumpTransactionHandlerError::InvalidTransaction(err))?;
 
         // Sign transaction
 
         let signers = vec![keypair];
-        let recent_blockhash = self.rpc.get_latest_blockhash().map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::RpcClientError(err.to_string())
-        })?;
+        let recent_blockhash = self
+            .rpc
+            .get_latest_blockhash()
+            .map_err(|err| PumpTransactionHandlerError::RpcClientError(err.to_string()))?;
 
-        tx.try_sign(&signers, recent_blockhash).map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::InvalidSignature(err.to_string())
-        })?;
+        tx.try_sign(&signers, recent_blockhash)
+            .map_err(|err| PumpTransactionHandlerError::InvalidSignature(err.to_string()))?;
 
-        self.rpc.send_and_confirm_transaction(&tx).map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::RpcClientError(err.to_string())
-        })
+        self.rpc
+            .send_and_confirm_transaction(&tx)
+            .map_err(|err| PumpTransactionHandlerError::RpcClientError(err.to_string()))
     }
 }
