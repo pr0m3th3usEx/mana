@@ -1,4 +1,4 @@
-mod adapters;
+extern crate pump;
 
 #[tokio::main]
 async fn main() {

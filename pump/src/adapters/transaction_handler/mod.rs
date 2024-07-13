@@ -11,9 +11,9 @@ use solana_sdk::{signature::Signature, transaction::Transaction};
 use thiserror::Error;
 
 static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
-const PUMP_FUN_TRADE_API_URL: &'static str = "https://pumpapi.fun/api/trade_transaction";
+const PUMP_FUN_TRADE_API_URL: &str = "https://pumpapi.fun/api/trade_transaction";
 
-mod input;
+pub mod input;
 
 pub struct PumpTransactionHandler<'a> {
     api: Client,
@@ -50,7 +50,7 @@ impl<'a> PumpTransactionHandler<'a> {
         Ok(Self { rpc, api })
     }
 
-    async fn trade_transaction(
+    pub async fn trade_transaction(
         &self,
         trade_type: TradeTransactionType,
         order: TransactionOrder,
@@ -94,7 +94,7 @@ impl<'a> TransactionHandler for PumpTransactionHandler<'a> {
             .await?;
         let mut tx: Transaction = tx_str
             .try_into()
-            .map_err(|err| PumpTransactionHandlerError::InvalidTransaction(err))?;
+            .map_err(PumpTransactionHandlerError::InvalidTransaction)?;
 
         // Sign transaction
 
@@ -122,7 +122,7 @@ impl<'a> TransactionHandler for PumpTransactionHandler<'a> {
             .await?;
         let mut tx: Transaction = tx_str
             .try_into()
-            .map_err(|err| PumpTransactionHandlerError::InvalidTransaction(err))?;
+            .map_err(PumpTransactionHandlerError::InvalidTransaction)?;
 
         // Sign transaction
 
