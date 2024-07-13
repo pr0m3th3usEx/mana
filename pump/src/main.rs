@@ -1,3 +1,6 @@
-fn main() {
+mod adapters;
+
+#[tokio::main]
+async fn main() {
     println!("Hello, world!");
 }

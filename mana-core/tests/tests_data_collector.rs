@@ -1,4 +1,4 @@
-use core::traits::{
+use mana_core::traits::{
     data_collector::{DataCollector, Event},
     observability::publisher::Publisher,
 };

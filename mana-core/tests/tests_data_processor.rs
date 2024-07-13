@@ -1,4 +1,4 @@
-use core::traits::data_processor::DataProcessor;
+use mana_core::traits::data_processor::DataProcessor;
 
 use chrono::Utc;
 use data_processor::MockDataProcessor;

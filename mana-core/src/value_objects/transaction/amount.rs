@@ -1,3 +1,4 @@
+#[derive(Debug, Clone, Copy)]
 pub struct Amount {
     decimals: u8,
     value: f64,

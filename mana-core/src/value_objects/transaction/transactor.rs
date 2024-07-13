@@ -1,6 +1,6 @@
 use solana_sdk::pubkey::Pubkey;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Transactor {
     address: Pubkey,
 }

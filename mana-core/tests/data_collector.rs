@@ -1,10 +1,12 @@
-use core::traits::{
+use mana_core::traits::{
     data_collector::{DataCollector, DataCollectorResult, Event},
     observability::publisher::{Publisher, Subscriber},
 };
 use std::{collections::HashMap, sync::RwLock};
 
-use core::traits::data_repository::{DataRepository, DataRepositoryError, DataRepositoryResult};
+use mana_core::traits::data_repository::{
+    DataRepository, DataRepositoryError, DataRepositoryResult,
+};
 
 /**
  *
