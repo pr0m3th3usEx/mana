@@ -1,20 +1,20 @@
-use solana_sdk::pubkey::Pubkey;
+use solana_sdk::signature::Keypair;
 
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug)]
 pub struct Transactor {
-    address: Pubkey,
+    keypair: Keypair,
 }
 
 impl Transactor {
-    pub fn new(address: impl TryInto<Pubkey>) -> Result<Self, &'static str> {
+    pub fn new(keypair: impl TryInto<Keypair>) -> Result<Self, &'static str> {
         Ok(Self {
-            address: address
+            keypair: keypair
                 .try_into()
-                .map_err(|_| "Transactor: invalid public key")?,
+                .map_err(|_| "Transactor: invalid keypair")?,
         })
     }
 
-    pub fn value(&self) -> Pubkey {
-        self.address
+    pub fn value(&self) -> &Keypair {
+        &self.keypair
     }
 }

@@ -5,7 +5,6 @@ use crate::value_objects::{
     transaction::{amount::Amount, transactor::Transactor},
 };
 
-#[derive(Clone, Copy)]
 pub struct TransactionOrder {
     pub mint: TokenAddress,
     pub transactor: Transactor,

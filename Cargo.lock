@@ -2487,6 +2487,8 @@ dependencies = [
 name = "pump"
 version = "0.1.0"
 dependencies = [
+ "bincode",
+ "bs58",
  "chrono",
  "mana-core",
  "reqwest 0.12.4",

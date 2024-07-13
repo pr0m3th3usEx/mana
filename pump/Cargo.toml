@@ -13,3 +13,5 @@ reqwest.workspace = true
 solana-sdk.workspace = true
 solana-client.workspace = true
 serde_json.workspace = true
+bs58.workspace = true
+bincode.workspace = true
