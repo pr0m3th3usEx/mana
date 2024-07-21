@@ -1,0 +1,44 @@
+Dump of information about pump.fun workflows, apis, bounding curve applications
+
+Pump fun Curve Pricing function(to try) => y = 1073000191 - 32190005730/(30+x),
+Where x is the amount of SOL purchased
+And y is the amount of token obtained\
+
+800 000 000 tokens are issued at launch of a token
+
+The approximate number of SOLs required to transition to Radium is 86.
+This number fluctuates slightly, typically between 84 and 86 SOL.
+
+-> Initial token price: 2.8e-08 SOL
+
+(What does this fluctuation is due to ?)
+
+To obtain tokens available on pre-sale in the bounding curve:
+
+- Get balance of token at the token mint addreess - 200 000 000 (Blocked tokens until transition to Raydium)
+
+To obtain SOLs available in the bounding curve:
+
+- Get owner of the token mint (Account) and get SOL Balance
+
+[UPDATE]
+
+Pump fun Curve Pricing function(to try) => y = 1073000191 - 32190005730/(30+x)
+This formulation does not taken supply available in the pool
+
+Fixing the derivative function to express price per token in terms of SOl for a given x
+
+ChatGPT contexts containing data: https://chatgpt.com/c/299224c0-4e5d-441d-b813-68d86f252859
+
+To obtain the current token price for the amount of reserve :
+
+```python
+def token_price(x):
+    return ((k + x) ** 2) / C
+# with
+#    k = 30
+#    C = 32190005730
+```
+
+From this point, I can now effective calculate the price of a Token in real-time from the data available
+on-chain and base the rule engine on these data

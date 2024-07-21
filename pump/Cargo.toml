@@ -8,6 +8,7 @@ mana-core = { path = "../mana-core" }
 thiserror.workspace = true
 chrono.workspace = true
 tokio.workspace = true
+futures.workspace = true
 serde.workspace = true
 reqwest.workspace = true
 solana-sdk.workspace = true

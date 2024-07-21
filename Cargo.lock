@@ -2598,6 +2598,7 @@ dependencies = [
  "bs58",
  "chrono",
  "clap 4.5.9",
+ "futures",
  "mana-core",
  "reqwest 0.12.4",
  "serde",
