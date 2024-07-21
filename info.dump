@@ -42,3 +42,5 @@ def token_price(x):
 
 From this point, I can now effective calculate the price of a Token in real-time from the data available
 on-chain and base the rule engine on these data
+
+1% for pump.fun on buy order

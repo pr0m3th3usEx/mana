@@ -7,8 +7,7 @@ use clap::{arg, value_parser, ArgAction, Command};
 const CLI_VERSION: &str = env!("CARGO_PKG_VERSION");
 const CLI_BIN_NAME: &str = env!("CARGO_PKG_NAME");
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error + 'static>> {
+fn main() -> Result<(), Box<dyn Error + 'static>> {
     let mut cmd = Command::new(CLI_BIN_NAME)
         .version(CLI_VERSION)
         .subcommand(

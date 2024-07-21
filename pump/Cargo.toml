@@ -4,17 +4,35 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+# Core
 mana-core = { path = "../mana-core" }
-thiserror.workspace = true
-chrono.workspace = true
-tokio.workspace = true
+
+# CLI
+clap.workspace = true
+
+# Async Runtime
+smol.workspace = true
 futures.workspace = true
+
+# Error handling
+thiserror.workspace = true
+
+# Serialization / Deserialization
 serde.workspace = true
-reqwest.workspace = true
+serde_json.workspace = true
+
+# Date & Time
+chrono.workspace = true
+
+# HTTP Client
+isahc.workspace = true
+
+# Web3 / Solana
 solana-sdk.workspace = true
 solana-client.workspace = true
-serde_json.workspace = true
 bs58.workspace = true
 bincode.workspace = true
 
-clap = { version = "4.5.9", features = ["derive"] }
+
+[dev-dependencies]
+tokio.workspace = true

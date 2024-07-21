@@ -1,22 +1,16 @@
-use input::{TradeTransactionRequest, TradeTransactionResponse, TradeTransactionType};
 use mana_core::{
     entities::transaction_order::TransactionOrder,
     traits::transaction_handler::{TransactionHandler, TransactionHandlerResult},
+    value_objects::transaction::transaction_type::TradeTransactionType,
 };
-use solana_client::{
-    client_error::reqwest::{header::HeaderMap, Client},
-    rpc_client::RpcClient,
-};
+use solana_client::{client_error::reqwest::header::HeaderMap, rpc_client::RpcClient};
 use solana_sdk::{signature::Signature, transaction::Transaction};
 use thiserror::Error;
 
-static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
-const PUMP_FUN_TRADE_API_URL: &str = "https://pumpapi.fun/api/trade_transaction";
-
-pub mod input;
+use crate::pump_client::{PumpApiClient, PumpApiClientError};
 
 pub struct PumpTransactionHandler<'a> {
-    api: Client,
+    api: &'a PumpApiClient,
     rpc: &'a RpcClient,
 }
 
@@ -36,48 +30,22 @@ pub enum PumpTransactionHandlerError {
     ApiClientError(String),
 }
 
+impl From<PumpApiClientError> for PumpTransactionHandlerError {
+    fn from(error: PumpApiClientError) -> Self {
+        PumpTransactionHandlerError::ApiClientError(error.to_string())
+    }
+}
+
 impl<'a> PumpTransactionHandler<'a> {
-    pub fn new(rpc: &'a RpcClient) -> Result<Self, PumpTransactionHandlerError> {
+    pub fn new(
+        rpc: &'a RpcClient,
+        api: &'a PumpApiClient,
+    ) -> Result<Self, PumpTransactionHandlerError> {
         let mut headers = HeaderMap::new();
 
         headers.insert("Content-Type", "application/json".parse().unwrap());
-        let api = Client::builder()
-            .user_agent(APP_USER_AGENT)
-            .default_headers(headers)
-            .build()
-            .map_err(|err| PumpTransactionHandlerError::BuildError(err.to_string()))?;
 
         Ok(Self { rpc, api })
-    }
-
-    pub async fn trade_transaction(
-        &self,
-        trade_type: TradeTransactionType,
-        order: TransactionOrder,
-    ) -> Result<TradeTransactionResponse, PumpTransactionHandlerError> {
-        // Serialize request body
-        let req_body = serde_json::to_string(&TradeTransactionRequest::from((trade_type, order)))
-            .map_err(|err| {
-            // TODO log error
-            PumpTransactionHandlerError::BodyError(err.to_string())
-        })?;
-
-        // Send Pump.fun API request
-        let response = self
-            .api
-            .post(PUMP_FUN_TRADE_API_URL)
-            .body(req_body)
-            .send()
-            .await
-            .map_err(|err| PumpTransactionHandlerError::ApiClientError(err.to_string()))?;
-
-        // Deserialize response body
-        let res_body = response
-            .json::<TradeTransactionResponse>()
-            .await
-            .map_err(|err| PumpTransactionHandlerError::BodyError(err.to_string()))?;
-
-        Ok(res_body)
     }
 }
 
@@ -90,6 +58,7 @@ impl<'a> TransactionHandler for PumpTransactionHandler<'a> {
     ) -> TransactionHandlerResult<Signature, PumpTransactionHandlerError> {
         let keypair = order.transactor.value().insecure_clone();
         let tx_str = self
+            .api
             .trade_transaction(TradeTransactionType::Buy, order)
             .await?;
         let mut tx: Transaction = tx_str
@@ -118,6 +87,7 @@ impl<'a> TransactionHandler for PumpTransactionHandler<'a> {
     ) -> TransactionHandlerResult<Signature, PumpTransactionHandlerError> {
         let keypair = order.transactor.value().insecure_clone();
         let tx_str = self
+            .api
             .trade_transaction(TradeTransactionType::Sell, order)
             .await?;
         let mut tx: Transaction = tx_str

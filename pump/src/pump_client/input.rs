@@ -1,27 +1,9 @@
-use std::fmt::Display;
-
-use mana_core::entities::transaction_order::TransactionOrder;
-use serde::{Deserialize, Serialize};
-use solana_sdk::{
-    signer::Signer,
-    transaction::{Transaction, VersionedTransaction},
+use mana_core::{
+    entities::transaction_order::TransactionOrder,
+    value_objects::transaction::transaction_type::TradeTransactionType,
 };
-
-#[derive(Debug, Serialize, PartialEq, Eq)]
-#[serde(rename_all_fields(serialize = "lowercase"))]
-pub enum TradeTransactionType {
-    Buy,
-    Sell,
-}
-
-impl Display for TradeTransactionType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TradeTransactionType::Buy => write!(f, "buy"),
-            TradeTransactionType::Sell => write!(f, "sell"),
-        }
-    }
-}
+use serde::Serialize;
+use solana_sdk::signer::Signer;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -48,32 +30,6 @@ impl From<(TradeTransactionType, TransactionOrder)> for TradeTransactionRequest 
     }
 }
 
-#[derive(Deserialize)]
-pub struct TradeTransactionResponse {
-    pub transaction: String,
-}
-
-impl TryInto<Transaction> for TradeTransactionResponse {
-    type Error = String;
-
-    // Convert into unsigned transaction
-    fn try_into(self) -> Result<Transaction, Self::Error> {
-        let tx_bytes = bs58::decode(self.transaction).into_vec().map_err(|err| {
-            // TODO log error
-            err.to_string()
-        })?;
-        let versioned_tx: VersionedTransaction =
-            bincode::deserialize(&tx_bytes).map_err(|err| {
-                // TODO log error
-                err.to_string()
-            })?;
-
-        versioned_tx
-            .into_legacy_transaction()
-            .ok_or("Could not convert into legacy transaction".to_string())
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use mana_core::{
@@ -82,12 +38,12 @@ mod tests {
             priority_fee::PriorityFee,
             slippage_tolerance::SlippageTolerance,
             token::token_address::TokenAddress,
-            transaction::{amount::Amount, transactor::Transactor},
+            transaction::{
+                amount::Amount, transaction_type::TradeTransactionType, transactor::Transactor,
+            },
         },
     };
     use solana_sdk::{signature::Keypair, signer::Signer};
-
-    use crate::adapters::transaction_handler::input::TradeTransactionType;
 
     use super::TradeTransactionRequest;
 
