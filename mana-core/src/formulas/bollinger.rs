@@ -1,8 +1,8 @@
 use std::sync::{Arc, RwLock};
 
 use crate::{
-    maths,
     traits::metric::{Metric, MetricError, MetricResult},
+    utils::maths,
 };
 
 use super::sma::SMA;

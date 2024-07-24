@@ -1,29 +1,19 @@
-use std::{error::Error, fmt::Debug};
+use futures::Stream;
+use thiserror::Error;
 
-use super::observability::publisher::Publisher;
+use std::fmt::Debug;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
-pub enum Event {
-    New,
-}
-
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum DataCollectorError {
-    ServiceError(Box<dyn Error>),
-}
-
-impl std::fmt::Display for DataCollectorError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
-    }
+    #[error("ServiceError: {0}")]
+    ServiceError(String),
 }
 
 pub type DataCollectorResult<T> = std::result::Result<T, DataCollectorError>;
 
-pub trait DataCollector<T>: Publisher<Event, T> {
-    // Collects data collection from source
-    async fn consume(&self) -> DataCollectorResult<Option<T>>;
-
+pub trait DataCollector<T> {
     // Start standalone job
-    async fn start(&self);
+    async fn start(&self) -> impl Stream<Item = DataCollectorResult<T>>;
+
+    async fn stop(&self);
 }

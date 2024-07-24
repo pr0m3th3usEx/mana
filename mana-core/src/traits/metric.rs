@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::maths::MathError;
+use crate::utils::maths::MathError;
 
 #[derive(Debug)]
 pub enum MetricError {

@@ -3,9 +3,8 @@
 pub mod builders;
 pub mod entities;
 pub mod formulas;
-pub mod history;
-pub mod maths;
 pub mod traits;
+pub mod utils;
 pub mod value_objects;
 
 pub const LAMPORTS_DECIMALS: u8 = 9;

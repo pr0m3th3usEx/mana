@@ -4,7 +4,7 @@ use url::Url;
 
 use crate::builders::configuration_builder::inputs::NodeConfigInput;
 
-const MAINNET_URL: &str = "https://api.mainnet-beta.solana.com";
+pub const MAINNET_URL: &str = "https://api.mainnet-beta.solana.com";
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum NodeProvider {

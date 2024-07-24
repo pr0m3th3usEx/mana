@@ -1,6 +1,6 @@
 use crate::{
-    maths,
     traits::metric::{Metric, MetricResult},
+    utils::maths,
 };
 
 #[derive(Debug, Default)]
