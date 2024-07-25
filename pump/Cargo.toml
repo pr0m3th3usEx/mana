@@ -38,3 +38,4 @@ spl-associated-token-account.workspace = true
 
 [dev-dependencies]
 tokio.workspace = true
+rstest.workspace = true

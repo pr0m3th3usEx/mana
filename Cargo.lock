@@ -2791,6 +2791,7 @@ dependencies = [
  "futures",
  "isahc",
  "mana-core",
+ "rstest",
  "serde",
  "serde_json",
  "smol",
