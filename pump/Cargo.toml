@@ -13,6 +13,7 @@ clap.workspace = true
 # Async Runtime
 smol.workspace = true
 futures.workspace = true
+async-stream.workspace = true
 
 # Error handling
 thiserror.workspace = true
@@ -28,12 +29,12 @@ chrono.workspace = true
 isahc.workspace = true
 
 # Web3 / Solana
+solana-program.workspace = true
+bs58.workspace = true
 solana-sdk.workspace = true
 solana-client.workspace = true
-bs58.workspace = true
 bincode.workspace = true
-async-stream = "0.3.5"
-
+spl-associated-token-account.workspace = true
 
 [dev-dependencies]
 tokio.workspace = true

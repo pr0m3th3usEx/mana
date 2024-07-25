@@ -10,19 +10,21 @@ use chrono::Utc;
 use futures::Stream;
 use mana_core::{
     traits::data_collector::{DataCollector, DataCollectorResult},
-    value_objects::tick::Tick,
+    value_objects::{configuration::token_info::TokenInfo, tick::Tick},
 };
 use solana_client::rpc_client::RpcClient;
 
 pub struct PumpDataCollector<'a> {
+    token_info: TokenInfo,
     rpc: &'a RpcClient,
     delay: Duration,
     is_running: Arc<Mutex<bool>>,
 }
 
 impl<'a> PumpDataCollector<'a> {
-    pub fn new(rpc: &'a RpcClient, delay: Duration) -> Self {
+    pub fn new(token_info: TokenInfo, rpc: &'a RpcClient, delay: Duration) -> Self {
         Self {
+            token_info,
             rpc,
             delay,
             is_running: Arc::new(Mutex::new(false)),
@@ -44,7 +46,10 @@ impl<'a> DataCollector<Tick<PumpTokenLiquidity>> for PumpDataCollector<'a> {
                     }
                 }
                 thread::sleep(self.delay);
-                println!("Here");
+
+                // Data collection
+
+
                 yield Ok(Tick(Utc::now(), PumpTokenLiquidity::new(1_000_000_000f64, 20.0)));
             }
         }

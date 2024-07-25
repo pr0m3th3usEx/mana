@@ -61,6 +61,7 @@ pool_tokens = initial_tokens = 1_000_000_000  # Starting with 1 billion tokens
 trade_results = []
 
 for trade in trades:
+    action = ""
     if trade['type'] == 'buy':
         pool_sol, pool_tokens, tokens_bought = buy_order(pool_sol, pool_tokens, trade['amount'])
         action = f"Bought {tokens_bought:.10f} tokens for {trade['amount']} SOL"
@@ -82,7 +83,7 @@ sol_values = np.linspace(0, 100, 400)
 token_prices = [token_price(sol) for sol in sol_values]
 token_amounts = [token_amount(sol) for sol in sol_values]
 
-print(f"Pr: {token_price( 6.068 ):.10f}")
+print(f"Pr: {token_price( 1.021 ):.10f}")
 # print(f"Price per token: {sol_for_tokens(1)}")
 
 # plt.figure(figsize=(10, 6))

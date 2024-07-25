@@ -44,3 +44,28 @@ From this point, I can now effective calculate the price of a Token in real-time
 on-chain and base the rule engine on these data
 
 1% for pump.fun on buy order
+
+[UPDATE]
+
+const PUMP_PROGRAM_ADDRESS = new PublicKey(
+"6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+);
+
+// To get owner of pump token bounding curve
+const [boundingCurveOwner] = PublicKey.findProgramAddressSync(
+[
+    Buffer.from("bonding-curve"),
+    new PublicKey("3mzfgTgcfDgvGVZFjtsqQcjuGRpWaBUH6nZ6jk9Dpump").toBytes(),
+],
+PUMP_PROGRAM_ADDRESS,
+);
+console.log(boundingCurveOwner.toBase58());
+
+// To get bounding curve token account address
+console.log(
+getAssociatedTokenAddressSync(
+    new PublicKey("3mzfgTgcfDgvGVZFjtsqQcjuGRpWaBUH6nZ6jk9Dpump"),
+    boundingCurveOwner,
+    true,
+).toBase58(),
+);

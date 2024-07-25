@@ -7,10 +7,19 @@ use isahc::{
 };
 use mana_core::{
     entities::transaction_order::TransactionOrder,
-    value_objects::transaction::transaction_type::TradeTransactionType,
+    value_objects::{
+        token::token_address::TokenAddress, transaction::transaction_type::TradeTransactionType,
+    },
 };
 use output::TradeTransactionResponse;
+use solana_sdk::pubkey::Pubkey;
+use spl_associated_token_account::get_associated_token_address;
 use thiserror::Error;
+
+use crate::{
+    value_objects::token_liquidity::PumpTokenLiquidity, PUMP_BONDING_CURVE_SEED,
+    PUMP_PROGRAM_ADDRESS,
+};
 
 pub mod input;
 pub mod output;
@@ -78,6 +87,26 @@ impl PumpApiClient {
             .await
             .map_err(|err| PumpApiClientError::DeserializationError(err.to_string()))
     }
+
+    pub async fn get_token_liquidity(
+        &self,
+        mint: &TokenAddress,
+    ) -> Result<PumpTokenLiquidity, PumpApiClient> {
+        let (bonding_curve_owner, seed) = Pubkey::find_program_address(
+            &[PUMP_BONDING_CURVE_SEED.as_bytes(), &mint.value().to_bytes()],
+            &PUMP_PROGRAM_ADDRESS,
+        );
+
+        let bonding_curve_token_account =
+            get_associated_token_address(&bonding_curve_owner, &mint.value());
+
+        println!(
+            "owner: {} - seed: {} - bounding curve: {}",
+            bonding_curve_owner, seed, bonding_curve_token_account
+        );
+
+        Ok(PumpTokenLiquidity::new(1_000_000_000f64, 20.0))
+    }
 }
 
 #[cfg(test)]
@@ -132,6 +161,15 @@ mod tests {
             .trade_transaction(TradeTransactionType::Buy, order)
             .await;
 
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_get_liquidity() {
+        let api_client = PumpApiClient::new().unwrap();
+        let mint = TokenAddress::new("3mzfgTgcfDgvGVZFjtsqQcjuGRpWaBUH6nZ6jk9Dpump").unwrap();
+
+        let result = api_client.get_token_liquidity(&mint).await;
         assert!(result.is_ok());
     }
 }

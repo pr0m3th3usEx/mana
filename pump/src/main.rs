@@ -6,6 +6,10 @@ use clap::{arg, value_parser, ArgAction, Command};
 use futures::pin_mut;
 use mana_core::traits::data_collector::DataCollector;
 use mana_core::value_objects::configuration::node::MAINNET_URL;
+use mana_core::value_objects::configuration::token_info::TokenInfo;
+use mana_core::value_objects::token::token_address::TokenAddress;
+use mana_core::value_objects::token::token_name::TokenName;
+use mana_core::value_objects::token::token_symbol::TokenSymbol;
 use pump::adapters::data_collector::PumpDataCollector;
 use smol::stream::StreamExt;
 use solana_client::rpc_client::RpcClient;
@@ -18,12 +22,18 @@ async fn run(
     wait_flag: bool,
     sandbox_flag: bool,
 ) -> Result<(), Box<dyn Error + 'static>> {
-    // Parse configuration
-    // Check token metadata
-    // Check environment variables required (MANA_PRIVATE_KEY, MANA_PUBLIC_KEY)
+    // TODO Parse configuration
+    // TODO Check token metadata
+    // TODO Check environment variables required (MANA_PRIVATE_KEY, MANA_PUBLIC_KEY)
 
+    let token_info = TokenInfo::new(
+        TokenName::new("JERRY").unwrap(),
+        TokenAddress::new("3mzfgTgcfDgvGVZFjtsqQcjuGRpWaBUH6nZ6jk9Dpump").unwrap(),
+        TokenSymbol::new("JERRY").unwrap(),
+        6,
+    );
     let rpc = RpcClient::new(MAINNET_URL);
-    let data_collector = PumpDataCollector::new(&rpc, Duration::from_secs(2));
+    let data_collector = PumpDataCollector::new(token_info, &rpc, Duration::from_secs(2));
     let stream = data_collector.start().await;
     pin_mut!(stream);
 
