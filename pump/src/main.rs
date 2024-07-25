@@ -28,12 +28,12 @@ async fn run(
 
     let token_info = TokenInfo::new(
         TokenName::new("JERRY").unwrap(),
-        TokenAddress::new("3mzfgTgcfDgvGVZFjtsqQcjuGRpWaBUH6nZ6jk9Dpump").unwrap(),
+        TokenAddress::new("D8NWshXxmdrr1G4fkgoKb9LqsBLMyR7yGDKxNnCcpump").unwrap(),
         TokenSymbol::new("JERRY").unwrap(),
         6,
     );
     let rpc = RpcClient::new(MAINNET_URL);
-    let data_collector = PumpDataCollector::new(token_info, &rpc, Duration::from_secs(2));
+    let data_collector = PumpDataCollector::new(&token_info, &rpc, Duration::from_secs(1));
     let stream = data_collector.start().await;
     pin_mut!(stream);
 
