@@ -3,6 +3,7 @@
 pub mod builders;
 pub mod entities;
 pub mod formulas;
+pub mod histories;
 pub mod traits;
 pub mod utils;
 pub mod value_objects;

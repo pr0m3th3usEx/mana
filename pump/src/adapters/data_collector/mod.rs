@@ -71,7 +71,7 @@ impl<'a> DataCollector<Tick<PumpTokenLiquidity>> for PumpDataCollector<'a> {
         }
     }
 
-    async fn stop(&self) -> () {
+    async fn stop(&self) {
         *self.is_running.lock().expect("lock poisoned") = false;
     }
 }

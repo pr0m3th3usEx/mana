@@ -1,5 +1,6 @@
 pub mod bet;
 pub mod configuration;
+pub mod ohlc;
 pub mod order;
 pub mod priority_fee;
 pub mod slippage_tolerance;

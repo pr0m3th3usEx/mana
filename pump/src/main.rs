@@ -1,5 +1,6 @@
 extern crate pump;
 
+use std::path::Path;
 use std::{error::Error, path::PathBuf, time::Duration};
 
 use clap::{arg, value_parser, ArgAction, Command};
@@ -18,9 +19,9 @@ const CLI_VERSION: &str = env!("CARGO_PKG_VERSION");
 const CLI_BIN_NAME: &str = env!("CARGO_PKG_NAME");
 
 async fn run(
-    config_file: &PathBuf,
-    wait_flag: bool,
-    sandbox_flag: bool,
+    _config_file: &Path,
+    _wait_flag: bool,
+    _sandbox_flag: bool,
 ) -> Result<(), Box<dyn Error + 'static>> {
     // TODO Parse configuration
     // TODO Check token metadata
